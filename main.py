@@ -1,3 +1,4 @@
+from fractions import Fraction
 from tkinter import *
 import PIL
 from PIL import ImageTk, Image
@@ -10,54 +11,61 @@ from exifread.tags import exif
 global exif_text
 
 
+# Function that browse image
 def browse_image():
     global image_object, image_loaded_label
     root.filename = filedialog.askopenfilename(initialdir="/", title="Select An Image",
-                                               filetypes=(("jpeg files", "*.jpeg"), ("png files", "*.png")))
-    image = Image.open(root.filename)
+                                               filetypes=(("jpeg files", "*.jpeg"),("png files", "*.png")))
+    openimage(root.filename)
+    listbox.delete(0, 'end')
+
+
+# Function that opens image loaded
+def openimage(uri):
+    global image_object
+
+    image = Image.open(uri)
     image_object = image.resize((450, 350), Image.ANTIALIAS)
     image_loaded = ImageTk.PhotoImage(image_object)
     img_lbl.configure(image=image_loaded)
     img_lbl.image = image_loaded
-    exif_lbl.configure(text="")
 
 
+# Rotating image left and right
 def rotate_image(direction):
     global image_object
     angle = {"left": 90, "right": -90}[direction]
     image_object = image_object.rotate(angle)
     rotated_tk = ImageTk.PhotoImage(image_object)
     img_lbl.config(image=rotated_tk)
-    img_lbl.image = rotated_tk #Prevent garbage collection
+    img_lbl.image = rotated_tk  # Prevent garbage collection
 
 
+# Exif data of image
 def get_exif():
-    global image_object
-    exifdata = image_object.getexif()
-    for tag_id in exifdata:
-        # get the tag name, instead of human unreadable tag id
+    global image_object, listbox
+    listbox = Listbox(exif_frame,width=50, height=8)
+    listbox.grid(row=2, column=0)
+    try:
+        exif = image_object.getexif()
+    except AttributeError:
+        return {}
+    exif_table = {}
+    for tag_id, value in exif.items():
         tag = TAGS.get(tag_id, tag_id)
-        data = exifdata.get(tag_id)
-        # decode bytes
-        if isinstance(data, bytes):
-            data = data.decode()
-        print(f"{tag:25}: {data}")
-
-
-def insert_text():
-    global exif_text
-    exif_text = "calamdanrei"
-    exif_lbl.configure(text=exif_text)
+        exif_table[tag] = value
+        listbox.insert(END, tag + ':  ' + str(exif_table[tag])) # Insert data into a list
 
 
 root = tk.Tk()
 root.title('Exif Viewer')
 root.geometry('500x550')
-root.iconbitmap("/icons/exif.png")
+root.iconbitmap("icons/exif.png")
+root.minsize(500, 550)
+root.maxsize(500, 550)
 
 info_frame = Frame(root)
 info_frame.pack(side=TOP)
-
 
 image_frame = Frame(info_frame)
 image_frame.grid(row=0, column=0)
@@ -65,36 +73,29 @@ image_frame.grid(row=0, column=0)
 exif_frame = LabelFrame(info_frame)
 exif_frame.grid(row=1, column=0)
 
-
 img_lbl = Label(image_frame)
 img_lbl.grid(row=0, column=0)
 
-
-exif_lbl = Message(exif_frame, font=("helvetica", 18), aspect=200)
-exif_lbl.grid(row=1, column=0)
-
-listbox = Listbox(exif_frame)
-
 buttons_frame = Frame(root, padx=5, pady=5)
-# buttons_frame.grid_columnconfigure(0, weight=1)
-
 
 browse_button = Button(buttons_frame, padx=20, pady=5, text="Load image", command=browse_image)
 browse_button.grid(row=0, column=0)
 
-rotate_left_button = Button(buttons_frame, padx=10, pady=5, text="Rotate left", command=lambda: rotate_image("left"))
+rotate_left_button = Button(buttons_frame, padx=10, pady=5, text="Rotate left",
+                            command=lambda: rotate_image("left"))
 rotate_left_button.grid(row=0, column=1)
 
 rotate_right_button = Button(buttons_frame, padx=10, pady=5, text="Rotate right", command=lambda: rotate_image("right"))
 rotate_right_button.grid(row=0, column=2)
 
-get_exif = Button(buttons_frame, padx=20, pady=5, text="Get EXIF", command=get_exif)
-get_exif.grid(row=0, column=3)
+exif_btn = Button(buttons_frame, padx=20, pady=5, text="Get EXIF", command=get_exif)
+exif_btn.grid(row=0, column=3)
 
 exit_button = Button(buttons_frame, padx=20, pady=5, text="Exit", command=root.quit)
 exit_button.grid(row=0, column=4)
 
 buttons_frame.pack(side=BOTTOM)
 
-
+openimage('images/sample.jpeg')
+get_exif()
 root.mainloop()
