@@ -78,20 +78,24 @@ img_lbl.grid(row=0, column=0)
 
 buttons_frame = Frame(root, padx=5, pady=5)
 
-browse_button = Button(buttons_frame, padx=20, pady=5, text="Load image", command=browse_image)
+browse_button = Button(buttons_frame, padx=20, pady=5, text="Load image",
+                       command=browse_image)
 browse_button.grid(row=0, column=0)
 
 rotate_left_button = Button(buttons_frame, padx=10, pady=5, text="Rotate left",
                             command=lambda: rotate_image("left"))
 rotate_left_button.grid(row=0, column=1)
 
-rotate_right_button = Button(buttons_frame, padx=10, pady=5, text="Rotate right", command=lambda: rotate_image("right"))
+rotate_right_button = Button(buttons_frame, padx=10, pady=5, text="Rotate right",
+                             command=lambda: rotate_image("right"))
 rotate_right_button.grid(row=0, column=2)
 
-exif_btn = Button(buttons_frame, padx=20, pady=5, text="Get EXIF", command=get_exif)
+exif_btn = Button(buttons_frame, padx=20, pady=5, text="Get EXIF",
+                  command=get_exif)
 exif_btn.grid(row=0, column=3)
 
-exit_button = Button(buttons_frame, padx=20, pady=5, text="Exit", command=root.quit)
+exit_button = Button(buttons_frame, padx=20, pady=5, text="Exit",
+                     command=root.quit)
 exit_button.grid(row=0, column=4)
 
 buttons_frame.pack(side=BOTTOM)
