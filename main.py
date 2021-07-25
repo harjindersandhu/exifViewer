@@ -48,10 +48,13 @@ def get_exif():
     except AttributeError:
         return {}
     exif_table = {}
-    for tag_id, value in exif.items():
-        tag = TAGS.get(tag_id, tag_id)
-        exif_table[tag] = value
-        listbox.insert(END, tag + ':  ' + str(exif_table[tag])) # Insert data into a list
+    if exif == {}:
+        listbox.insert(END, "EXIF DATA NOT FOUND FOR THIS IMAGE")
+    else:
+        for tag_id, value in exif.items():
+            tag = TAGS.get(tag_id, tag_id)
+            exif_table[tag] = value
+            listbox.insert(END, tag + ':  ' + str(exif_table[tag]))
 
 
 root = tk.Tk()
