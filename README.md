@@ -7,7 +7,7 @@ The software requires:
 - Pillow(PIL)
 
 
-##Installation 
+## Installation 
 
 Clone the repository and open the project on your favourite IDE. Packages required:
 
