@@ -3,6 +3,6 @@ Project made using Python v3 and Tkinter with the aim of catching EXIF data from
 
 The software requires:
 
--Python3
--Tkinter
--Pillow(PIL)
+- Python3
+- Tkinter
+- Pillow(PIL)
