@@ -1,11 +1,8 @@
-from fractions import Fraction
 from tkinter import *
-import PIL
 from PIL import ImageTk, Image
 from tkinter import filedialog
 import tkinter as tk
 from PIL.ExifTags import TAGS, GPSTAGS
-from exifread.tags import exif
 
 
 global exif_text
