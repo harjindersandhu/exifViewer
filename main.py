@@ -32,7 +32,7 @@ def openimage(uri):
 def rotate_image(direction):
     global image_object
     angle = {"left": 90, "right": -90}[direction]
-    image_object = image_object.rotate(angle)
+    image_object = image_object.rotate(angle, expand=True)
     rotated_tk = ImageTk.PhotoImage(image_object)
     img_lbl.config(image=rotated_tk)
     img_lbl.image = rotated_tk  # Prevent garbage collection
@@ -56,10 +56,10 @@ def get_exif():
 
 root = tk.Tk()
 root.title('Exif Viewer')
-root.geometry('500x550')
+root.geometry('600x650')
 root.iconbitmap("icons/exif.png")
-root.minsize(500, 550)
-root.maxsize(500, 550)
+root.minsize(600, 650)
+root.maxsize(600, 650)
 
 info_frame = Frame(root)
 info_frame.pack(side=TOP)
@@ -70,7 +70,7 @@ image_frame.grid(row=0, column=0)
 exif_frame = LabelFrame(info_frame)
 exif_frame.grid(row=1, column=0)
 
-img_lbl = Label(image_frame)
+img_lbl = Label(image_frame, width=450, height=450)
 img_lbl.grid(row=0, column=0)
 
 buttons_frame = Frame(root, padx=5, pady=5)
